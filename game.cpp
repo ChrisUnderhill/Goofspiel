@@ -36,7 +36,6 @@ class Player{
         void selectCard(int card){
             currentSelection = card;
             played = true;
-
         }
 };
 
