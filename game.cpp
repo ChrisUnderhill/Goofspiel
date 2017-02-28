@@ -1,11 +1,26 @@
 #include <stdio.h>
 #include <vector>
+#include <unistd.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <iostream>
+#include <thread>
+
 
 using namespace std;
 
 
 //Todo: give each player a unique randomly generated identifier upon connection
 //such that if a player disconnects they can reconnect by supplying their UID.
+
+void dostuff(int, int);
+void error(const char *msg)
+{
+    perror(msg);
+    exit(1);
+}
 
 class Player{
     //Player class will join up to the player's sockets somehow and take their
@@ -35,7 +50,7 @@ class Player{
                 return temp;
             }
             else{
-                return -1
+                return -1;
             }
         }
 
@@ -63,19 +78,10 @@ class GameState{
         int numPlayers;
         vector<bool> prizePile;
         vector<Player> players;
-    public:
-        bool checkRoundComplete(){
-            for(std::vector<Player>::iterator it = players.begin(); it != players.end() ++it){
-                if(  ! it->hasPlayed() ){
-                    return false;
-                }
-            }
-            return true;
-        }
+        thread threadArr[5]; //Arbitrarily make 5 threads (only 2 are likely to be used
+        int threadCount = 0;
 
-        void notify(int id);
-
-        void runServer(int port)
+        int runServer(int port)
         {
              int sockfd, newsockfd, portno, pid;
              socklen_t clilen;
@@ -95,7 +101,7 @@ class GameState{
              listen(sockfd,5);
              clilen = sizeof(cli_addr);
              int id = 0;
-             while (1) {
+             while (true) {
                  newsockfd = accept(sockfd, 
                        (struct sockaddr *) &cli_addr, &clilen);
                  if (newsockfd < 0) 
@@ -114,6 +120,24 @@ class GameState{
              } /* end of while */
              close(sockfd);
              return 0; /* we never get here */
+        }
+
+    public:
+        bool checkRoundComplete(){
+            for(std::vector<Player>::iterator it = players.begin(); it != players.end(); ++it){
+                if(  ! it->hasPlayed() ){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        void notify(int id);
+
+
+        void makeServer(int port){
+            threadArr[threadCount] = thread(&GameState::runServer, this, port);
+            threadCount++;
         }
 };
 
