@@ -45,8 +45,10 @@ int main(int argc, char *argv[])
      listen(sockfd,5);
      clilen = sizeof(cli_addr);
      int id = 0;
-     while (1) {
+     int closed = 0;
+     do {
          id++;
+         printf("id = %d      closed = %d ", id, closed);
          newsockfd = accept(sockfd, 
                (struct sockaddr *) &cli_addr, &clilen);
          if (newsockfd < 0) 
@@ -59,8 +61,10 @@ int main(int argc, char *argv[])
              dostuff(newsockfd, id);
              exit(0);
          }
-         else close(newsockfd);
-     } /* end of while */
+         else{
+             close(newsockfd);
+         }
+     } while(closed<id); /* end of while */
      close(sockfd);
      return 0; /* we never get here */
 }
@@ -74,7 +78,7 @@ void dostuff (int sock, int id)
 {
 
     int n;
-    char buffer[256]; //used to be 256 but unnecessary
+    char buffer[256]; 
 
     bool active = true;
     while (active){
@@ -91,5 +95,7 @@ void dostuff (int sock, int id)
             n = write(sock,"I got your message",18);
             if (n < 0) error("ERROR writing to socket");
         }
+
     }
+    
 }

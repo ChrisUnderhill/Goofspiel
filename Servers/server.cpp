@@ -102,11 +102,11 @@ void *task1 (void *dummyPt)
 {
     cout << "Thread No: " << pthread_self() << endl;
     char test[300];
-    bzero(test, 301);
+    bzero(test, 300);
     bool loop = false;
     while(!loop)
     {    
-        bzero(test, 301);
+        bzero(test, 300);
         
         
         read(connFd, test, 300);

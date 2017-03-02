@@ -15,6 +15,7 @@ class Player{
         int currentSelection;
 
     public:
+        Player(int id, int cards);
         std::vector<bool> getHand();
         int getID();
         int play();
