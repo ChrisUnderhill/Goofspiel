@@ -20,13 +20,14 @@ class GameState{
         int numCards;
         int numPlayers;
         std::vector<bool> prizePile;
-        std::vector<Player> players;
 
     public:
         GameState(int cards, int players);
+        void addPlayer(Player* p);
         bool checkRoundComplete();
         //void notify(int id);  //this is probably unnecessary
-        char msg[256];
+        void playerSelect(int id, int card);
+        std::vector<Player*> players;
 };
 
 #endif

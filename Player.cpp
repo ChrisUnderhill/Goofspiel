@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Player.h"
+#include <stdio.h>
 
 Player::Player(int id, int cards)
     :ID(id)
@@ -26,11 +27,11 @@ int Player::getID(){
 int Player::play(){
     if (currentSelection > 0){
         int temp = currentSelection;
-        currentSelection = -1;
+        currentSelection = 5;
         return temp;
     }
     else{
-        return -1;
+        return 9;
     }
 }
 
@@ -39,7 +40,13 @@ bool Player::hasPlayed(){
 }
 
 void Player::selectCard(int card){
-    currentSelection = card;
+    this->currentSelection = card;
+    printf("player: address = %d    my card is %d\n", this, currentSelection);
+}
+
+int Player::getSelection(){
+    printf("player %d: my card is %d\n", this, currentSelection);
+    return currentSelection;
 }
 
 #endif

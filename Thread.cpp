@@ -12,6 +12,7 @@
 #include <iostream>
 #include <pthread.h>
 #include "Thread.h"
+#include "GameState.h"
 
 
 
@@ -63,7 +64,12 @@ void* Thread::runServer()
     close(sockfd);
 }
 
-Thread::Thread(){}
+Thread::Thread(GameState* game)
+    :gs(game)
+{
+    printf("original game = %d     new game = %d\n", game, gs);
+    printf("Yo");
+};
 
 static void* runThread(void* arg);
 
@@ -127,6 +133,8 @@ void Thread::dostuff (int sock, int id)
         }else{
             //cout<<buffer[0];
             printf("Here is the message from sock %d : %s\n", id, buffer);
+            printf("number = %d\n", atoi(buffer));
+            gs->playerSelect(id, atoi(buffer));
             n = write(sock,"I got your message",18);
             if (n < 0) error("ERROR writing to socket");
         }

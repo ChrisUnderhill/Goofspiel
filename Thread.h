@@ -2,6 +2,7 @@
 #define THREAD_H
 
 #include <pthread.h>
+#include "GameState.h"
 
 class Thread{
     //Thread stores basic info like the number of cards that the game is
@@ -21,7 +22,7 @@ class Thread{
         int detached;
 
     public:
-        Thread();
+        Thread(GameState* game);
         void makeServer();
         void dostuff(int sock, int id);
 
@@ -29,6 +30,7 @@ class Thread{
         int start();
         int join();
         int detach();
+        GameState* gs;
 };
 
 #endif

@@ -21,6 +21,7 @@ class Player{
         int play();
         bool hasPlayed();
         void selectCard(int card);
+        int getSelection();
 };
 
 #endif
