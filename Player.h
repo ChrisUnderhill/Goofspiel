@@ -16,12 +16,13 @@ class Player{
 
     public:
         Player(int id, int cards);
+        //virtual ~Player();
         std::vector<bool> getHand();
         int getID();
         int play();
-        bool hasPlayed();
+        bool hasPlayed() ;
         void selectCard(int card);
-        int getSelection();
+        int getSelection()  ;
 };
 
 #endif

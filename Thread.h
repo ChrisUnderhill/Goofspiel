@@ -20,11 +20,12 @@ class Thread{
         int threadCount = 0;
         int running;
         int detached;
+        int numCards;
 
     public:
         Thread(GameState* game);
         void makeServer();
-        void dostuff(int sock, int id);
+        void* dostuff(GameState* gs, int sock, int id);
 
         void* runServer();
         int start();

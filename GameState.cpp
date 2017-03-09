@@ -16,6 +16,11 @@ void GameState::addPlayer(Player* p){
     players.push_back(p);
 }
 
+void GameState::remPlayer(int id){
+    //delete &players[id];
+    //players.erase(players.begin() + id);
+}
+
 
 bool GameState::checkRoundComplete(){
     bool b = true;
@@ -26,12 +31,15 @@ bool GameState::checkRoundComplete(){
     return b;
 }
 
+int GameState::getNumCards(){
+    return numCards;
+}
 
 void GameState::playerSelect(int id, int card){
-    printf("id = %d   card = %d \n", id, card);
+    //printf("id = %d   card = %d \n", id, card);
     players[id]->selectCard(card);
-    printf("players card = %d\n", players[0]->getSelection());
-    printf("players hasPlayed = %d\n", this->players[id]->hasPlayed());
+    //printf("players card = %d\n", players[0]->getSelection());
+    //printf("players hasPlayed = %d\n", this->players[id]->hasPlayed());
 
 }
 

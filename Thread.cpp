@@ -15,7 +15,12 @@
 #include "GameState.h"
 
 
-
+struct arg_struct{
+    Thread* arg1;
+    int arg2;
+    int arg3;
+    GameState* arg4;
+};
 
 void error(const char *msg)
 {
@@ -23,12 +28,15 @@ void error(const char *msg)
     exit(1);
 }
 
+static void* connectClient(void* arg);
+
 void* Thread::runServer()
 {
     int port = 5000;
     int sockfd, newsockfd, portno, pid;
     socklen_t clilen;
     struct sockaddr_in serv_addr, cli_addr;
+    pthread_t threads[10];
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) 
@@ -49,6 +57,11 @@ void* Thread::runServer()
                 (struct sockaddr *) &cli_addr, &clilen);
         if (newsockfd < 0) 
             error("ERROR on accept");
+
+        arg_struct args = {this, newsockfd, id, gs};
+
+        pthread_create(&threads[id], NULL, connectClient, &args);
+        /*
         pid = fork();
         if (pid < 0)
             error("ERROR on fork");
@@ -56,9 +69,9 @@ void* Thread::runServer()
             close(sockfd);
             dostuff(newsockfd, id);
             exit(0);
-
         }
-        else close(newsockfd);
+        */
+        //close(newsockfd);
         id++;
     } /* end of while */
     close(sockfd);
@@ -67,8 +80,8 @@ void* Thread::runServer()
 Thread::Thread(GameState* game)
     :gs(game)
 {
-    printf("original game = %d     new game = %d\n", game, gs);
-    printf("Yo");
+    printf("original game = %p     new game = %p\n", game, gs);
+    numCards=game->getNumCards();
 };
 
 static void* runThread(void* arg);
@@ -114,8 +127,11 @@ int Thread::detach(){
  for each connection.  It handles all communication
  once a connnection has been established.
  *****************************************/
-void Thread::dostuff (int sock, int id)
+void* Thread::dostuff (GameState* gs, int sock, int id)
 {
+    Player player1(id, numCards);
+    gs->addPlayer(&player1);
+    printf("%p\n", &gs);
     int n;
     char buffer[256]; 
 
@@ -128,17 +144,25 @@ void Thread::dostuff (int sock, int id)
             printf("Breaking upon receiveing !");
             n = write(sock, "!", 1);
             active = false;
-            //close(sock);
-            return;
+            //gs->remPlayer(id);
+            close(sock);
         }else{
             //cout<<buffer[0];
-            printf("Here is the message from sock %d : %s\n", id, buffer);
-            printf("number = %d\n", atoi(buffer));
+            //printf("Here is the message from sock %d : %s\n", id, buffer);
+            //printf("number = %d\n", atoi(buffer));
+            gs->mu.lock();
             gs->playerSelect(id, atoi(buffer));
+            gs->mu.unlock();
             n = write(sock,"I got your message",18);
             if (n < 0) error("ERROR writing to socket");
         }
     }
 }
+
+static void* connectClient(void* arg){
+    struct arg_struct *args = (struct arg_struct*) arg;
+    return (((Thread*)args->arg1)->dostuff(args->arg4, args->arg2, args->arg3));
+}
+
 
 #endif

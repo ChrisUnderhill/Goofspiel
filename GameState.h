@@ -4,6 +4,7 @@
 #include <vector>
 #include <pthread.h>
 #include "Player.h"
+#include <mutex>
 
 class GameState{
     //GameState stores basic info like the number of cards that the game is
@@ -24,10 +25,14 @@ class GameState{
     public:
         GameState(int cards, int players);
         void addPlayer(Player* p);
+        void remPlayer(int id);
         bool checkRoundComplete();
         //void notify(int id);  //this is probably unnecessary
         void playerSelect(int id, int card);
+        int getNumCards();
         std::vector<Player*> players;
+
+        std::mutex mu;
 };
 
 #endif

@@ -41,22 +41,27 @@ int main(int argc, char *argv[])
     serv_addr.sin_port = htons(portno);
     if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) 
         error("ERROR connecting");
-    while (true){
-        printf("Please enter the message: ");
-        bzero(buffer,256);
-        fgets(buffer,256,stdin);
-        n = write(sockfd,buffer,strlen(buffer));
-        if (n < 0) 
-            error("ERROR writing to socket");
-        bzero(buffer,256);
-        n = read(sockfd,buffer,256);
-        if (n < 0) 
-             error("ERROR reading from socket");
-        if ( buffer[0] == '!') {
-            printf("breaking");
-            break;
+    try{
+        while (true){
+            printf("Please enter the message: ");
+            bzero(buffer,256);
+            fgets(buffer,256,stdin);
+            n = write(sockfd,buffer,strlen(buffer));
+            if (n < 0) 
+                error("ERROR writing to socket");
+            bzero(buffer,256);
+            n = read(sockfd,buffer,256);
+            if (n < 0) 
+                error("ERROR reading from socket");
+            if ( buffer[0] == '!') {
+                printf("breaking");
+                break;
+            }
+            printf("%s\n",buffer);
         }
-        printf("%s\n",buffer);
+    }
+    catch(int e){
+        n=write(sockfd, "!", 1);
     }
     close(sockfd);
     return 0;
