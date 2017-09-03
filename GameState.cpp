@@ -17,8 +17,8 @@ void GameState::addPlayer(Player* p){
 }
 
 void GameState::remPlayer(int id){
-    //delete &players[id];
-    //players.erase(players.begin() + id);
+    delete &players[id];
+    players.erase(players.begin() + id);
 }
 
 

@@ -15,14 +15,13 @@ Player::Player(int id, int cards)
     }
 }
 
-/*
 Player::~Player(){
-    delete &ID;
-    delete &numCards;
-    delete &hand;
-    delete &currentSelection;
+    //delete &ID;
+    //delete &numCards;
+    //delete &hand;
+    //delete &currentSelection;
 }
-*/
+
 std::vector<bool> Player::getHand(){
     return hand;
 }

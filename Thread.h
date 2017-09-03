@@ -21,9 +21,10 @@ class Thread{
         int running;
         int detached;
         int numCards;
+        int port;
 
     public:
-        Thread(GameState* game);
+        Thread(GameState* game, int port);
         void makeServer();
         void* dostuff(GameState* gs, int sock, int id);
 

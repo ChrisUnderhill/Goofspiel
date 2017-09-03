@@ -32,7 +32,6 @@ static void* connectClient(void* arg);
 
 void* Thread::runServer()
 {
-    int port = 5000;
     int sockfd, newsockfd, portno, pid;
     socklen_t clilen;
     struct sockaddr_in serv_addr, cli_addr;
@@ -77,10 +76,10 @@ void* Thread::runServer()
     close(sockfd);
 }
 
-Thread::Thread(GameState* game)
+Thread::Thread(GameState* game, int port)
     :gs(game)
+    ,port(port)
 {
-    printf("original game = %p     new game = %p\n", game, gs);
     numCards=game->getNumCards();
 };
 
@@ -131,7 +130,7 @@ void* Thread::dostuff (GameState* gs, int sock, int id)
 {
     Player player1(id, numCards);
     gs->addPlayer(&player1);
-    printf("%p\n", &gs);
+    printf("GameState: %p\n", &gs);
     int n;
     char buffer[256]; 
 
@@ -144,7 +143,7 @@ void* Thread::dostuff (GameState* gs, int sock, int id)
             printf("Breaking upon receiveing !");
             n = write(sock, "!", 1);
             active = false;
-            //gs->remPlayer(id);
+            gs->remPlayer(id);
             close(sock);
         }else{
             //cout<<buffer[0];
@@ -161,7 +160,7 @@ void* Thread::dostuff (GameState* gs, int sock, int id)
 
 static void* connectClient(void* arg){
     struct arg_struct *args = (struct arg_struct*) arg;
-    return (((Thread*)args->arg1)->dostuff(args->arg4, args->arg2, args->arg3));
+    return ((args->arg1)->dostuff(args->arg4, args->arg2, args->arg3));
 }
 
 

@@ -16,7 +16,7 @@ class Player{
 
     public:
         Player(int id, int cards);
-        //virtual ~Player();
+        virtual ~Player();
         std::vector<bool> getHand();
         int getID();
         int play();

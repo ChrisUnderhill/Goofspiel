@@ -23,17 +23,19 @@ using namespace std;
 
 GameState game1( 13, 2);
 
-int main(){
-        
+int main(int argc, char *argv[]){
     //printf("actual game = %d\n", &game1);
-        
     //Player player1(1, 13);
     //game1.addPlayer(&player1);
     //printf("players card = %d\n", players[id]->getSelection());
 
     //printf("player1 = %d, gamestate.player[0] = %d\n", &player1, game1.players[0]);
-
-    Thread thread1(&game1);
+    if (argc<2){
+        printf("You forgot commandline parameter for port");
+        return 1;
+    }
+    printf("%d\n", atoi(argv[1]) );
+    Thread thread1(&game1, atoi(argv[1]));
 
     thread1.start();
 
